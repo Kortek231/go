@@ -85,17 +85,39 @@ public class GoClient implements ImageObserver{
 				response = input.readLine();
 				System.out.println(response);
 				if (response.startsWith("VALID_MOVE")) {
-					int locx = Integer.parseInt(response.substring(11,12));
-					int locy = Integer.parseInt(response.substring(12,13));
+					if(response.length()==14){
+					locx = Integer.parseInt(response.substring(11,12));
+					locy = Integer.parseInt(response.substring(13,14));
+					} else if(response.length()==15){
+						if(response.charAt(13)==' '){
+						locx = Integer.parseInt(response.substring(11,13));
+						locy = Integer.parseInt(response.substring(14,15));
+						}
+					} else if(response.length()==16){
+						locx = Integer.parseInt(response.substring(11,13));
+						locy = Integer.parseInt(response.substring(14,16));
+					}
 					board.intersections[locx][locy].state=icon;
 					messageLabel.setText("Please wait for your opponent move");
-					
+					frame.getContentPane().validate();
+			       		frame.getContentPane().repaint();
 				} else if (response.startsWith("OPPONENT_MOVED")) {
-					int locx = Integer.parseInt(response.substring(15,16));
-					int locy = Integer.parseInt(response.substring(16,17));
+					if(response.length()==18){
+					locx = Integer.parseInt(response.substring(15,16));
+					locy = Integer.parseInt(response.substring(17,18));
+					} else if(response.length()==19){
+						if(response.charAt(17)==' '){
+						locx = Integer.parseInt(response.substring(15,17));
+						locy = Integer.parseInt(response.substring(18,19));
+						}
+					} else if(response.length()==20){
+						locx = Integer.parseInt(response.substring(15,17));
+						locy = Integer.parseInt(response.substring(18,20));
+					}
 					board.intersections[locx][locy].state=opponentIcon;
 					messageLabel.setText("Opponent moved, now it's your turn");
-					
+					frame.getContentPane().validate();
+			       		frame.getContentPane().repaint();
 				} else if (response.startsWith("VICTORY")) {
 					messageLabel.setText("You win");
 					break;
