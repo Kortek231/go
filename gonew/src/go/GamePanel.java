@@ -29,7 +29,7 @@ public class GamePanel extends JPanel {
 	private Socket socket;
 	private Goban board;
 	char mark;
-	public GamePanel(Socket socket, Goban board, char mark) throws IOException {
+	public GamePanel(Socket socket, Goban board) throws IOException {
 		super();
 		repaint();
 		System.out.println(socket);
@@ -75,7 +75,7 @@ public class GamePanel extends JPanel {
 					end = false;
 					if (mark== 'B') col = FieldState.black;
 					else col = FieldState.white;
-					out.println("MOVE "+i+j+"mark "+mark);
+					out.println("MOVE "+i+" "+j);
 									
 					}
 				}
