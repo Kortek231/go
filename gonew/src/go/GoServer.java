@@ -110,9 +110,21 @@ class Game {
                 while (true){
                 	String command = input.readLine();
                 	if (command.startsWith("MOVE")) {
-                		//System.out.println(command);                		
-                		int x = Integer.parseInt(command.substring(5,6));
-                		int y = Integer.parseInt(command.substring(6,7));
+                		if(command.length()==8){
+                		x = Integer.parseInt(command.substring(5,6));
+                		y = Integer.parseInt(command.substring(7,8));
+                		}else if(command.length()==9){
+                			if(command.charAt(7)==' '){
+                        		x = Integer.parseInt(command.substring(5,7));
+                        		y = Integer.parseInt(command.substring(8,9));
+                			} else{
+                				x = Integer.parseInt(command.substring(5,6));
+                        		y = Integer.parseInt(command.substring(7,9));
+                			  }
+                		}else if(command.length()==10){
+            				x = Integer.parseInt(command.substring(5,7));
+                    		y = Integer.parseInt(command.substring(8,10));
+            			  }
                 		if (legalMove(x, y, this)) {
                 			System.out.println(command);  
                 			output.println("VALID_MOVE "+x+y);
