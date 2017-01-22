@@ -76,11 +76,7 @@ public class GamePanel extends JPanel {
 					if (mark== 'B') col = FieldState.black;
 					else col = FieldState.white;
 					out.println("MOVE "+i+j+"mark "+mark);
-					
-					if(board.intersections[i][j].state == FieldState.free){
-						board.intersections[i][j].state = col;
-						}
-					
+									
 					}
 				}
 			public void mouseReleased(MouseEvent e){
