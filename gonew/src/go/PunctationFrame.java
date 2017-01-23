@@ -3,6 +3,11 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class PunctationFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -12,10 +17,18 @@ public class PunctationFrame extends JFrame {
 	static JLabel label_mv = new JLabel("Black player move");
 	static JButton button_pass = new JButton("Pass");
 	static JButton button_concede = new JButton("Concede");
+	private Socket socket;
+	BufferedReader input;
+	PrintWriter output;
 	
-	
-	public PunctationFrame() {
+	public PunctationFrame(Socket socket) throws IOException {
 		super("Punctation");
+		this.socket=socket;
+		System.out.println(socket);
+		input = new BufferedReader
+			(new InputStreamReader(socket.getInputStream()));
+		output = new PrintWriter(socket.getOutputStream(), true);
+		
 		this.setSize(300, 350);
 		this.setLayout(null);
 		
@@ -42,12 +55,16 @@ public class PunctationFrame extends JFrame {
 				if(GamePanel.col == FieldState.black){
 					GamePanel.winner = FieldState.white;
 					label_f.setText("And the winner is... BLACK");
+					output.println("FINISH BLACK");
 				}
 				else{
 					GamePanel.winner = FieldState.black;
 					label_f.setText("And the winner is... WHITE");
+					output.println("FINISH WHITE");
 				}
+				output.print("FINISH WHITE");
 				GamePanel.finish = true;
+				
 			}
 		});
 		add(button_concede);
@@ -58,8 +75,13 @@ public class PunctationFrame extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				if(button_pass.getText() == "Pass"){
 					if(!GamePanel.pass){
-						if(GamePanel.col == FieldState.black) GamePanel.col = FieldState.white;
-						else GamePanel.col = FieldState.black;
+						if(GamePanel.col == FieldState.black) {GamePanel.col = FieldState.white;
+						output.println("PASS BLACK");
+						}
+						else { GamePanel.col = FieldState.black;
+							output.println("PASS WHITE");
+							}
+						
 						GamePanel.pass = true;
 					}else{
 						GamePanel.finish = true;
