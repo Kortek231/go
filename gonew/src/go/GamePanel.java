@@ -28,12 +28,13 @@ public class GamePanel extends JPanel {
 	static FieldState winner;
 	private Socket socket;
 	private Goban board;
-	char mark;
-	public GamePanel(Socket socket, Goban board) throws IOException {
+	private char mark;
+	public GamePanel(Socket socket, Goban board, char mark) throws IOException {
 		super();
 		this.socket=socket;
 		this.board=board;
-	//	this.mark=mark;
+		this.mark=mark;
+		System.out.println(mark);
       //  BufferedReader in = new BufferedReader(new InputStreamReader(
         //       socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -71,85 +72,100 @@ public class GamePanel extends JPanel {
 					}
 					if(end == false) j = 0;
 					end = false;
-				/*	if (mark== 'B') col = FieldState.black;
-					else col = FieldState.white; */
+					if (mark== 'B') col = FieldState.black;
+					else col = FieldState.white; 
 					out.println("MOVE "+i+" "+j);
 					
 				/*if(board.intersections[i][j].state == FieldState.free){
 						board.intersections[i][j].state = col;
 						}*/
-
-						List<Field> neighbours = new ArrayList<Field>();
-						neighbours = board.neighbourhood(board.intersections[i][j]);
-						boolean neigh_death = false;
-						for(Field f : neighbours){
-							if (!board.checkalive(f.x, f.y)){
-								neigh_death = true;
-							}
-							board.chain.clear();
-						}
-						if(neigh_death){	
-							board.checkalive(i,j);
-							for(Field f : board.chain){
-								f.immortality = true;
-							}
-						}
-						if(last_death_size == 1 && last_death == board.intersections[i][j]) ko = true;
-						
-						if((board.checkalive(i,j) || neigh_death) && !ko ){
-							board.chain.clear();
-							if(col == FieldState.black){
-								col = FieldState.white;
-								PunctationFrame.label_mv.setText("White player move");
-							}
-							else if(col == FieldState.white){
-								col = FieldState.black;						
-								PunctationFrame.label_mv.setText("Black player move");
-							}
-	
-							repaint();
-							
-							for(int k = 0 ; k <= 18 ; k++){
-								for(int p = 0 ; p <= 18 ; p++){
-									if(board.intersections[k][p].state != FieldState.free)
-										if(!board.checkalive(k,p) && !board.intersections[k][p].immortality){
-											last_death = board.intersections[k][p];
-											last_death_size = board.chain.size();
-											System.out.println(last_death_size);
-											if(board.intersections[k][p].state == FieldState.black){
-												pkt_w += board.chain.size();
-												//board.point_w = pkt_w;
-												PunctationFrame.label_w.setText("White player points: " + Integer.toString(pkt_w));
-											}
-											if(board.intersections[k][p].state == FieldState.white){
-												pkt_b += Goban.chain.size();
-												//board.point_b = pkt_b;
-												PunctationFrame.label_b.setText("Black player points: " + Integer.toString(pkt_b));
-											}
-											for(Field field : board.chain){
-												field.uncover();
-											}
-										}else{
-											board.chain.clear();
-											for(int q = 0 ; q <=18 ; q++){
-												for(int u = 0 ; u <=18 ; u++){
-													board.intersections[k][p].immortality = false;
+						if(!finish){
+							if(Goban.intersections[i][j].state == FieldState.free){
+								Goban.intersections[i][j].state = col;
+								List<Field> neighbours = new ArrayList<Field>();
+								neighbours = Goban.neighbourhood(Goban.intersections[i][j]);
+								boolean neigh_death = false;
+								for(Field f : neighbours){
+									if (!Goban.checkalive(f.x, f.y)){
+										neigh_death = true;
+									}
+									Goban.chain.clear();
+								}
+								if(neigh_death){	
+									Goban.checkalive(i,j);
+									for(Field f : Goban.chain){
+										f.immortality = true;
+									}
+								}
+								if(last_death_size == 1 && last_death == Goban.intersections[i][j]) ko = true;
+								
+								if((Goban.checkalive(i,j) || neigh_death) && !ko ){
+									Goban.chain.clear();
+									if(col == FieldState.black){
+										col = FieldState.white;
+										PunctationFrame.label_mv.setText("White player move");
+									}
+									else if(col == FieldState.white){
+										col = FieldState.black;						
+										PunctationFrame.label_mv.setText("Black player move");
+									}
+			
+									repaint();
+									
+									for(int k = 0 ; k <= 18 ; k++){
+										for(int p = 0 ; p <= 18 ; p++){
+											if(Goban.intersections[k][p].state != FieldState.free)
+												if(!Goban.checkalive(k,p) && !Goban.intersections[k][p].immortality){
+													last_death = Goban.intersections[k][p];
+													last_death_size = Goban.chain.size();
+													System.out.println(last_death_size);
+													if(Goban.intersections[k][p].state == FieldState.black){
+														pkt_w += Goban.chain.size();
+														//Goban.point_w = pkt_w;
+														PunctationFrame.label_w.setText("White player points: " + Integer.toString(pkt_w));
+													}
+													if(Goban.intersections[k][p].state == FieldState.white){
+														pkt_b += Goban.chain.size();
+														//Goban.point_b = pkt_b;
+														PunctationFrame.label_b.setText("Black player points: " + Integer.toString(pkt_b));
+													}
+													for(Field field : Goban.chain){
+														field.uncover();
+													}
+												}else{
+													Goban.chain.clear();
+													for(int q = 0 ; q <=18 ; q++){
+														for(int u = 0 ; u <=18 ; u++){
+															Goban.intersections[k][p].immortality = false;
+														}
+													}
 												}
-											}
 										}
+									}
+								}else{
+									Goban.intersections[i][j].uncover();
+									if(ko){
+										ko = false;
+										last_death.x = -1;
+									}
 								}
 							}
-						}else{
-							board.intersections[i][j].uncover();
-							if(ko){
-								ko = false;
-								last_death.x = -1;
+							} else {
+								if(agree)
+									if(Goban.territory[i][j].state == FieldState.free){
+										Goban.territory[i][j].state = col;
+										if(col == FieldState.black) col = FieldState.white;
+										else col = FieldState.black;
+										PunctationFrame.label_mv.setText("Does " + col + " player agree?");
+										agree = false;
+										
+										repaint();
 							}
-						}
 					
 				}
-					
-				}
+			}
+			
+			}
 			public void mouseReleased(MouseEvent e){
 				repaint();
 			}
