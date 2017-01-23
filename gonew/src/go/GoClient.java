@@ -51,6 +51,7 @@ public class GoClient implements ImageObserver{
 	private BufferedReader input;
 	private PrintWriter output;
 	char mark;
+	int locx, locy;
 	
 	public GoClient(String serverAddress) throws Exception{
 		//network
@@ -60,9 +61,7 @@ public class GoClient implements ImageObserver{
 		output = new PrintWriter(socket.getOutputStream(), true);
 		//Layout GUI
 		frame.getContentPane().add(messageLabel, "South");
-		System.out.println("mark "+icon);
-		JPanel obrazPanel = new GamePanel(socket, board, mark);
-
+		JPanel obrazPanel = new GamePanel(socket, board);
 		frame.getContentPane().add(obrazPanel, "Center");
 
 	}
@@ -84,6 +83,7 @@ public class GoClient implements ImageObserver{
 			while (true){
 				response = input.readLine();
 				System.out.println(response);
+			
 				if (response.startsWith("VALID_MOVE")) {
 					if(response.length()==14){
 					locx = Integer.parseInt(response.substring(11,12));
@@ -92,16 +92,21 @@ public class GoClient implements ImageObserver{
 						if(response.charAt(13)==' '){
 						locx = Integer.parseInt(response.substring(11,13));
 						locy = Integer.parseInt(response.substring(14,15));
-						}
+						} else {
+							locx = Integer.parseInt(response.substring(11,12));
+							locy = Integer.parseInt(response.substring(13,15));
+							}
 					} else if(response.length()==16){
 						locx = Integer.parseInt(response.substring(11,13));
 						locy = Integer.parseInt(response.substring(14,16));
 					}
 					board.intersections[locx][locy].state=icon;
+					if (response.endsWith("CLEAR")) board.chain.clear();
 					messageLabel.setText("Please wait for your opponent move");
 					frame.getContentPane().validate();
-			       		frame.getContentPane().repaint();
+			        frame.getContentPane().repaint();
 				} else if (response.startsWith("OPPONENT_MOVED")) {
+					System.out.println("dlug "+response.length());
 					if(response.length()==18){
 					locx = Integer.parseInt(response.substring(15,16));
 					locy = Integer.parseInt(response.substring(17,18));
@@ -109,7 +114,10 @@ public class GoClient implements ImageObserver{
 						if(response.charAt(17)==' '){
 						locx = Integer.parseInt(response.substring(15,17));
 						locy = Integer.parseInt(response.substring(18,19));
-						}
+						} else {
+							locx = Integer.parseInt(response.substring(15,16));
+							locy = Integer.parseInt(response.substring(17,19));
+							}
 					} else if(response.length()==20){
 						locx = Integer.parseInt(response.substring(15,17));
 						locy = Integer.parseInt(response.substring(18,20));
@@ -117,7 +125,7 @@ public class GoClient implements ImageObserver{
 					board.intersections[locx][locy].state=opponentIcon;
 					messageLabel.setText("Opponent moved, now it's your turn");
 					frame.getContentPane().validate();
-			       		frame.getContentPane().repaint();
+			        frame.getContentPane().repaint();
 				} else if (response.startsWith("VICTORY")) {
 					messageLabel.setText("You win");
 					break;
