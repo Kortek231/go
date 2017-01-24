@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2.0">
+  <zoom_level>3</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>210</x>
+      <y>48</y>
+      <w>90</w>
+      <h>69</h>
+    </coordinates>
+    <panel_attributes>go::Game
+--
+~col = FieldState.black: FieldState
+~finish, pass, agree = true: boolean
+~winner: FieldState
+~x, y, i = 0, j = 0: int
+~last_death = new Field(): Field
+~last_death_size = 0: int
+~ko = false: boolean
++pkt_b = 0, pkt_w = 0: int
++board = new Goban(): Goban
+~currentPlayer: Player
+--
++main(String[] args): void
++legalMove(int x, int y, Player player): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>48</y>
+      <w>156</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>go::GoClient
+--
+-frame = new JFrame(): JFrame
+-messageLabel = new JLabel(""): JLabel
+-icon: FieldState
+-opponentIcon: FieldState
+-board = new Goban(): Goban
+-image: BufferedImage
+-whiteW: BufferedImage
+-blackB: BufferedImage
+-whitemark: BufferedImage
+-blackmark: BufferedImage
+-PORT = 8901: int
+-socket: Socket
+-input: BufferedReader
+-output: PrintWriter
+~mark: char
+~locx, locy: int
+-punkt: JFrame
+--
++GoClient(String serverAddress): ctor
++play(): void
+-wantsToPlayAgain(): boolean
++main(String[] args): void
++imageUpdate(Image img, int infoflags, int x, int y, int width, int height): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>516</x>
+      <y>45</y>
+      <w>111</w>
+      <h>69</h>
+    </coordinates>
+    <panel_attributes>go::PunctationFrame
+--
+-serialVersionUID = 1L: long
+~label_w = new JLabel("White player points: 0"): JLabel
+~label_b = new JLabel("Black player points: 0"): JLabel
+~label_f = new JLabel(""): JLabel
+~label_mv: JLabel
+~button_pass = new JButton("Pass"): JButton
+~button_concede = new JButton("Concede"): JButton
+-socket: Socket
+~input: BufferedReader
+~output: PrintWriter
+--
++PunctationFrame(Socket socket, char mark): ctor
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>255</x>
+      <y>267</y>
+      <w>87</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>go::Goban
+--
+~intersections = new Field[19][19]: Field[][]
+~territory = new Field[19][19]: Field[][]
+~chain = new ArrayList&lt;Field&gt;(): List&lt;Field&gt;
+--
+~Goban(): ctor
+~getfield(int x, int y): Field
+~countbreaths(int x, int y): int
+~checkalive(int x, int y): boolean
+~neighbourhood(Field f): List&lt;Field&gt;
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>168</x>
+      <y>150</y>
+      <w>120</w>
+      <h>87</h>
+    </coordinates>
+    <panel_attributes>go::GamePanel
+--
+-serialVersionUID = 6798557487676021660L: long
++pkt_b = 0, pkt_w = 0: int
+-image: BufferedImage
+-white: BufferedImage
+-black: BufferedImage
+-blackmark: BufferedImage
+-whitemark: BufferedImage
+~col: FieldState
+~finish, pass, agree = true: boolean
+~winner: FieldState
+-socket: Socket
+-board: Goban
+-mark: char
+--
++GamePanel(Socket socket, Goban board, char mark): ctor
++paintComponent(Graphics g): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>138</x>
+      <y>261</y>
+      <w>72</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>go::Field
+--
+~state = FieldState.free: FieldState
+~x, y: int
+~immortality: boolean
+--
+~cover(FieldState col): void
+~uncover(): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>138</x>
+      <y>318</y>
+      <w>72</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>go::FieldState
+--
+~free
+~white
+~black
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>375</x>
+      <y>270</y>
+      <w>39</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>go::GobanTest
+--
+~board: Goban
+--
++setUp(): void
++tearDown(): void
++testBoard(): void
++testMark(): void
++testSuicide(): void
++testAlive(): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>246</x>
+      <y>114</y>
+      <w>9</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>489</x>
+      <y>63</y>
+      <w>33</w>
+      <h>9</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>171</x>
+      <y>294</y>
+      <w>9</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>207</x>
+      <y>276</y>
+      <w>54</w>
+      <h>9</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>160.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>339</x>
+      <y>282</y>
+      <w>42</w>
+      <h>9</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>273</x>
+      <y>234</y>
+      <w>9</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>297</x>
+      <y>84</y>
+      <w>45</w>
+      <h>9</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
